@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wanandroid/route/MyRouteDelegate.dart';
+import 'package:wanandroid/route/RouteParser.dart';
 import 'package:wanandroid/ui/home/HomePage.dart';
 import 'package:wanandroid/ui/home/KnowledgeHierarchyPage.dart';
 import 'package:wanandroid/ui/home/MePage.dart';
@@ -9,18 +11,25 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _MyAppState();
+  }
+
+}
+
+class _MyAppState extends State<MyApp>{
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(
-        title: "wan android",
-      ),
+      routerDelegate: MyRouterDelegate(),
+      routeInformationParser: MyRouterParser(),
     );
   }
 }
@@ -47,7 +56,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text("wanandroid flutter"),
         ),
         body: Column(
           children: [
@@ -76,6 +85,8 @@ class _MainPageState extends State<MainPage> {
               onTap: (index) => switchPage(index),
               selectedItemColor: Colors.blue,
               unselectedItemColor: Colors.grey,
+              showUnselectedLabels: true,
+              type: BottomNavigationBarType.fixed,
             )
           ],
         ));

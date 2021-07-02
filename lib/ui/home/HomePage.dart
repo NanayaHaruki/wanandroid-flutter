@@ -1,10 +1,13 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wanandroid/data/Result.dart';
 import 'package:wanandroid/data/home/home_pag_d_t_o.dart';
+import 'package:wanandroid/route/MyRouteDelegate.dart';
+import 'package:wanandroid/route/MyRoutePath.dart';
+import 'package:wanandroid/ui/WebPage.dart';
 import 'package:wanandroid/utils/net/RequestApi.dart';
+
+import '../CommonWidgets.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -115,30 +118,42 @@ class HomePageState extends State<HomePage> {
   }
 
   _listItemWidget(Datas data) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(8,8,8,0),
-      child: Card(
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(data.title),
-              SizedBox(
-                height: 8,
-              ),
-              Row(
-                children: [
-                  Text(_autherName(data)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child:
-                        Text("分类：${data.superChapterName}/${data.chapterName}"),
-                  ),
-                  Text("时间：${data.niceDate}")
-                ],
-              )
-            ],
+    return InkWell(
+      onTap: () {
+        // MyRouterDelegate.push(MyRoutePath.web(data.link));
+        // MyRouterDelegate.of(context)
+        //     .push(MyRoutePath.web({"title": data.title, "url": data.link}));
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => WebPage(data.title, data.link)));
+      },
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
+        child: Card(
+          child: Padding(
+            padding: EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(data.title),
+                SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  children: [
+                    Text(_autherName(data)),
+                    Expanded(
+                        child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        "分类：${data.superChapterName}/${data.chapterName}",
+                        maxLines: 1,
+                      ),
+                    )),
+                    Text("时间：${data.niceDate}")
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -146,28 +161,16 @@ class HomePageState extends State<HomePage> {
   }
 
   _autherName(Datas data) {
-    if (data.author != null) {
+    if (data.author.isNotEmpty) {
       return "作者：${data.author}";
     }
-    if (data.shareUser != null) {
+    if (data.shareUser.isNotEmpty) {
       return "分享人：${data.shareUser}";
     }
     return "";
   }
 
-  _loadingWidget() {
-    return Padding(
-      padding: EdgeInsets.all(40),
-      child: CircularProgressIndicator(),
-    );
-  }
 
-  _errorWidget() {
-    return Padding(
-      padding: EdgeInsets.all(40),
-      child: Text("数据加载失败，请下拉刷新！"),
-    );
-  }
 
   @override
   void initState() {
@@ -182,12 +185,12 @@ class HomePageState extends State<HomePage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasError) {
-              return _errorWidget();
+              return errorWidget(errMsg: snapshot.error.toString());
             } else {
               return _listWidget();
             }
           } else {
-            return _loadingWidget();
+            return loadingWidget();
           }
         });
   }
