@@ -129,10 +129,17 @@ class RefreshLoadMoreListState extends State<RefreshLoadMoreList> {
           break;
         case LIST_DATA_TYPE_LOAD_MORE_END:
           _page = page;
-          _datas.insertAll(_datas.length - 1, fetchData.list);
-          _datas.last.dataType = LIST_DATA_TYPE_LOAD_MORE_END;
+          if(_datas.isEmpty){
+            _datas.clear();
+            _datas.addAll(fetchData.list);
+            var loadEndWidget = LoadMoreData(LIST_DATA_TYPE_LOAD_MORE_END);
+            _datas.add(loadEndWidget);
+          }else {
+            _datas.insertAll(_datas.length - 1, fetchData.list);
+            _datas.last.dataType = LIST_DATA_TYPE_LOAD_MORE_END;
+          }
           break;
-        case LIST_DATA_TYPE_LOAD_MORE_END:
+        case LIST_DATA_TYPE_LOAD_MORE_FAILED:
           _datas.last.dataType = LIST_DATA_TYPE_LOAD_MORE_FAILED;
           break;
       }

@@ -27,7 +27,6 @@ class MyRouterParser extends RouteInformationParser<MyRoutePath> {
 
   @override
   RouteInformation restoreRouteInformation(MyRoutePath path) {
-    print("restoreRouteInformation");
     if (path.isUnknown) {
       return RouteInformation(location: "/404");
     }

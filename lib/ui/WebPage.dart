@@ -30,13 +30,8 @@ class _WebPageState extends State<WebPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: WebView(
-        initialUrl: url,
-      ),
+    return WebView(
+      initialUrl: url,
     );
   }
 }

@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:wanandroid/data/Result.dart';
 import 'package:wanandroid/data/home/home_pag_d_t_o.dart';
-import 'package:wanandroid/route/MyRouteDelegate.dart';
-import 'package:wanandroid/route/MyRoutePath.dart';
 import 'package:wanandroid/ui/WebPage.dart';
 import 'package:wanandroid/utils/net/RequestApi.dart';
-
-import '../CommonWidgets.dart';
+import 'package:wanandroid/widgets/RefreshLoadMoreList.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,107 +13,9 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  bool isLoading = true;
-  int currPage = 0;
-  int maxPage = 0;
-  final loadMore = "######";
-  final loadMoreFailed = "加载失败，点击重试";
-  final loadMoreEnd = "没有更多了~";
-  var _datas = <Datas>[Datas(title: "######")];
 
-  Future _firstFuture;
-
-  _initFuture() async {
-    var res = await RequestApi.getHomePageListData(0);
-    if (res.success) {
-      _datas.insertAll(_datas.length - 1, res.data.data.datas);
-    }
-    return res;
-  }
-
-  Future<Result<HomePageDTO>> _fetchData(int page) async {
-    var result = await RequestApi.getHomePageListData(page);
-    _updateList(result);
-    return result;
-  }
-
-  _updateList(Result<HomePageDTO> result) {
-    if (result.success) {
-      setState(() {
-        currPage = result.data.data.curPage;
-        maxPage = result.data.data.pageCount;
-        if (result.data.data.curPage == 0) {
-          _datas.clear();
-          _datas.addAll(result.data.data.datas);
-          _datas.add(Datas(title: loadMore));
-        } else {
-          if (currPage == maxPage) {
-            _datas.last.setTitle(loadMoreEnd);
-          }
-          _datas.insertAll(_datas.length - 1, result.data.data.datas);
-        }
-      });
-    } else {
-      if (result.data.data.curPage != 0) {
-        setState(() {
-          _datas.last.setTitle(loadMoreFailed);
-        });
-      }
-    }
-  }
-
-  _loadMoreEndWidget() {
-    return Center(
-      child: Text("没有更多了"),
-    );
-  }
-
-  _loadMoreWidget() {
-    return Center(
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: CircularProgressIndicator(),
-      ),
-    );
-  }
-
-  _loadMoreFailedWidget() {
-    return Center(
-      child: TextButton(
-        onPressed: () {
-          _fetchData(currPage + 1);
-        },
-        child: Text("加载失败，点击重新加载"),
-      ),
-    );
-  }
-
-  _listWidget() {
-    return RefreshIndicator(
-        child: ListView.builder(
-          itemBuilder: (context, index) {
-            var data = _datas[index];
-            if (index == _datas.length - 1) {
-              if (data.title == loadMore) {
-                _fetchData(currPage + 1);
-                return _loadMoreWidget();
-              } else if (data.title == loadMoreEnd) {
-                return _loadMoreEndWidget();
-              } else {
-                return _loadMoreFailedWidget();
-              }
-            } else {
-              return _listItemWidget(data);
-            }
-          },
-          itemCount: _datas.length,
-        ),
-        onRefresh: () {
-          return _fetchData(0);
-        });
-  }
-
-  _listItemWidget(Datas data) {
+  Widget _listItemWidget(CommonListData commonListData) {
+    var data = commonListData as Datas;
     return InkWell(
       onTap: () {
         // MyRouterDelegate.push(MyRoutePath.web(data.link));
@@ -170,28 +68,36 @@ class HomePageState extends State<HomePage> {
     return "";
   }
 
-
-
-  @override
-  void initState() {
-    super.initState();
-    _firstFuture = _initFuture();
+  Future<FetchData> fetchRemoteData(int page) async {
+    var res = await RequestApi.getHomePageListData(page);
+    FetchData ans;
+    if (res.success) {
+      var dataType = 0;
+      if (page == 0) {
+        dataType = LIST_DATA_TYPE_DEFAULT;
+      } else {
+        if (res.data.data.curPage >= res.data.data.pageCount) {
+          dataType = LIST_DATA_TYPE_LOAD_MORE_END;
+        } else {
+          dataType = LIST_DATA_TYPE_LOAD_MORE_COMPLETED;
+        }
+      }
+      ans = FetchData(dataType, res.data.data.datas);
+    } else {
+      if (page == 0) {
+        ans = FetchData(LIST_DATA_TYPE_DEFAULT_ERROR, []);
+      } else {
+        ans = FetchData(LIST_DATA_TYPE_LOAD_MORE_FAILED, []);
+      }
+    }
+    return ans;
   }
-
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _firstFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasError) {
-              return errorWidget(errMsg: snapshot.error.toString());
-            } else {
-              return _listWidget();
-            }
-          } else {
-            return loadingWidget();
-          }
-        });
+    return Scaffold(
+      appBar: AppBar(title: Text("首页"),),
+      body: RefreshLoadMoreList((page)=> fetchRemoteData(page),_listItemWidget),
+
+    );
   }
 }

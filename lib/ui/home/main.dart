@@ -16,7 +16,6 @@ class MyApp extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _MyAppState();
   }
-
 }
 
 class _MyAppState extends State<MyApp>{
@@ -54,14 +53,10 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text("wanandroid flutter"),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-                child: IndexedStack(
+    return Column(
+      children: [
+        Expanded(
+            child: IndexedStack(
               index: _index,
               children: [
                 HomePage(),
@@ -71,6 +66,45 @@ class _MainPageState extends State<MainPage> {
                 MePage()
               ],
             )),
+        BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: "首页"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.assignment), label: "体系"),
+            BottomNavigationBarItem(icon: Icon(Icons.explore), label: "导航"),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.view_compact), label: "项目"),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: "我的"),
+          ],
+          currentIndex: _index,
+          onTap: (index) => switchPage(index),
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey,
+          showUnselectedLabels: true,
+          type: BottomNavigationBarType.fixed,
+        )
+      ],
+    );
+  }
+
+  originWidget(){
+    Scaffold(
+        appBar: AppBar(
+          title: Text("wanandroid flutter"),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+                child: IndexedStack(
+                  index: _index,
+                  children: [
+                    HomePage(),
+                    KnowledgeHierarchyPage(),
+                    NavigationPage(),
+                    ProjectPage(),
+                    MePage()
+                  ],
+                )),
             BottomNavigationBar(
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(icon: Icon(Icons.home), label: "首页"),

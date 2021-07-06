@@ -6,6 +6,7 @@ loadingWidget() {
     padding: EdgeInsets.all(40),
     child: Align(
       alignment: Alignment.topCenter,
+      child: CircularProgressIndicator(),
     ),
   );
 }
