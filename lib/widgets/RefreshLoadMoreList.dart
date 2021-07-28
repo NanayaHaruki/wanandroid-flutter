@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:wanandroid/data/Result.dart';
@@ -47,6 +49,7 @@ class RefreshLoadMoreListState extends State<RefreshLoadMoreList> {
         builder: (context, snapchat) {
           if (snapchat.connectionState == ConnectionState.done) {
             if (snapchat.hasError) {
+              log(snapchat.error.toString());
               return errorWidget();
             } else {
               return _listWidget();

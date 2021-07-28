@@ -8,11 +8,11 @@ class WebPage extends StatefulWidget {
   final String url;
   final String title;
 
-  WebPage(this.title,this.url);
+  WebPage(this.title, this.url);
 
   @override
   State<StatefulWidget> createState() {
-    return _WebPageState(title,url);
+    return _WebPageState(title, url);
   }
 }
 
@@ -28,10 +28,25 @@ class _WebPageState extends State<WebPage> {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
+  int progress = 0;
+
+  _updateLoadingProgress(int progress) {
+    setState(() {
+      this.progress = progress;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return WebView(
+    return Scaffold(
+        appBar: AppBar(
+        title: Text(title),
+    ),
+    body: WebView(
       initialUrl: url,
+      onProgress: _updateLoadingProgress,
+      gestureNavigationEnabled: true,
+    )
     );
   }
 }

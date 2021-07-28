@@ -4,7 +4,7 @@ import 'package:wanandroid/route/MyRoutePath.dart';
 import 'package:wanandroid/ui/UnknownPage.dart';
 import 'package:wanandroid/ui/WebPage.dart';
 import 'package:wanandroid/ui/home/HomePage.dart';
-import 'package:wanandroid/ui/home/main.dart';
+import 'package:wanandroid/main.dart';
 
 class MyRouterDelegate extends RouterDelegate<MyRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<MyRoutePath> {

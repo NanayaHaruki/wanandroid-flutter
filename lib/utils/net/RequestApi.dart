@@ -5,6 +5,7 @@ import 'package:wanandroid/data/home/home_pag_d_t_o.dart';
 import 'package:wanandroid/data/home/knowledge_tag_d_t_o.dart';
 import 'package:wanandroid/data/knowledge/hierarchy/knowledge_tag_list_d_t_o.dart';
 import 'package:wanandroid/data/knowledge/hierarchy/navi_d_t_o.dart';
+import 'package:wanandroid/data/question_d_t_o.dart';
 import 'package:wanandroid/utils/net/DioHelper.dart';
 
 var logger = Logger();
@@ -59,6 +60,21 @@ class RequestApi {
       var response =
       await DioHelper.getInstance().get("navi/json");
       var dto = NaviDTO.fromJson(response.data);
+      if (dto.errorCode == 0) {
+        return Result.success(dto);
+      } else {
+        return Result.error(dto.errorMsg);
+      }
+    } on DioError catch (e) {
+      return Result.error(e.message);
+    }
+  }
+
+  static Future<Result<QuestionDTO>> getQuestion(int page) async {
+    try {
+      var response =
+      await DioHelper.getInstance().get("wenda/list/$page/json");
+      var dto = QuestionDTO.fromJson(response.data);
       if (dto.errorCode == 0) {
         return Result.success(dto);
       } else {

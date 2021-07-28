@@ -4,7 +4,7 @@ import 'package:wanandroid/route/RouteParser.dart';
 import 'package:wanandroid/ui/home/HomePage.dart';
 import 'package:wanandroid/ui/home/KnowledgeHierarchyPage.dart';
 import 'package:wanandroid/ui/home/MePage.dart';
-import 'package:wanandroid/ui/home/NavigationPage.dart';
+import 'package:wanandroid/ui/home/QuestionPage.dart';
 import 'package:wanandroid/ui/home/ProjectPage.dart';
 
 void main() {
@@ -61,7 +61,7 @@ class _MainPageState extends State<MainPage> {
               children: [
                 HomePage(),
                 KnowledgeHierarchyPage(),
-                NavigationPage(),
+                QuestionPage(),
                 ProjectPage(),
                 MePage()
               ],
@@ -71,7 +71,7 @@ class _MainPageState extends State<MainPage> {
             BottomNavigationBarItem(icon: Icon(Icons.home), label: "首页"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.assignment), label: "体系"),
-            BottomNavigationBarItem(icon: Icon(Icons.explore), label: "导航"),
+            BottomNavigationBarItem(icon: Icon(Icons.sms), label: "问答"),
             BottomNavigationBarItem(
                 icon: Icon(Icons.view_compact), label: "项目"),
             BottomNavigationBarItem(icon: Icon(Icons.person), label: "我的"),
@@ -100,7 +100,7 @@ class _MainPageState extends State<MainPage> {
                   children: [
                     HomePage(),
                     KnowledgeHierarchyPage(),
-                    NavigationPage(),
+                    QuestionPage(),
                     ProjectPage(),
                     MePage()
                   ],

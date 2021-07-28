@@ -20,7 +20,7 @@ class HierarchyNaviListPage extends StatefulWidget {
   }
 }
 
-class HierarchyNaviListState extends State<HierarchyNaviListPage> {
+class HierarchyNaviListState extends State<HierarchyNaviListPage> with AutomaticKeepAliveClientMixin {
   final String type;
 
   HierarchyNaviListState(this.type);
@@ -119,4 +119,7 @@ class HierarchyNaviListState extends State<HierarchyNaviListPage> {
     Navigator.of(context).push(
         MaterialPageRoute(builder: (context) => KnowledgeTagListPage(tag)));
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

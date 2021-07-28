@@ -31,6 +31,7 @@ class KnowledgeHierarchyPageState extends State<KnowledgeHierarchyPage> with Tic
         title: TabBar(
           tabs: tabs.map((e) => Text(e)).toList(),
           controller: _tabController,
+          indicator: const BoxDecoration(),
         ),
       ),
       body: TabBarView(
@@ -44,4 +45,5 @@ class KnowledgeHierarchyPageState extends State<KnowledgeHierarchyPage> with Tic
       ),
     );
   }
+
 }
